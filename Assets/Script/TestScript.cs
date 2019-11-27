@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Uduino;
 
+
 public class TestScript : MonoBehaviour
 {
     public float X = 0f;
@@ -18,6 +19,10 @@ public class TestScript : MonoBehaviour
 
     public float span =1f;
 
+    [Range(0, 200)]
+    public int check;
+
+    public int checkcount=0;
     Collider myCollider;
 
 
@@ -26,8 +31,9 @@ public class TestScript : MonoBehaviour
     {
         StartCoroutine("Logging");
         StartCoroutine("CountTime");
+        StartCoroutine("StopTime");
 
-        
+
 
         myCollider = this.GetComponent<BoxCollider>();
 
@@ -41,12 +47,13 @@ public class TestScript : MonoBehaviour
 
 
 
-        Debug.Log(Vector2.Distance(tippoint, afterpoint));
+        //Debug.Log(Vector2.Distance(tippoint, afterpoint));
 
-        if(Vector2.Distance(tippoint, afterpoint) >=60 )
+        if(Vector2.Distance(tippoint, afterpoint) >= check)
         {
-           //Debug.Log("傾きの差は60以上です。");
+           Debug.Log("傾きの差は"+ check +"以上です。");
             myCollider.enabled = true;
+            checkcount++;
         }
         else
         {
@@ -79,5 +86,17 @@ public class TestScript : MonoBehaviour
 
         }
     }
+
+    IEnumerator StopTime()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(20);
+            Debug.Break();
+
+
+        }
+    }
+
 
 }
