@@ -6,8 +6,21 @@ using Uduino;
 
 public class TestScript : MonoBehaviour
 {
-    public float X = 0f;
-    public float Y = 0f;
+
+    public int maxPower;
+    public int minPower;
+
+
+    public int PinModeCount1;
+    public int PinModeCount2;
+
+    public GameObject cube;
+
+    public GameObject Manager;//オブジェクトマネージャーそのものが入る変数の定義
+    public int vibrationCount; //どのパターンかを決めるカウントの変数の定義
+
+    public float ValueX = 0f;
+    public float ValueY = 0f;
    
 
     private Vector2 tippoint;
@@ -23,20 +36,33 @@ public class TestScript : MonoBehaviour
     public int checkcount=0;
     Collider myCollider;
 
+    UduinoManager manager;
+
+    Manager script; //管理スクリプトの定義
+
+
+
     IEnumerator Vibration;
 
 
     // Start is called before the first frame update
     void Start()
     {
+
+        Manager = GameObject.Find("Manager");
+        script = Manager.GetComponent<Manager>();
+
+        //傾きセンサーコルーチンの開始
         StartCoroutine("Logging");
         StartCoroutine("CountTime");
      
-
-
+        //コライダーの定義
         myCollider = this.GetComponent<BoxCollider>();
+
+        //振動モーターの定義
         UduinoManager.Instance.pinMode(11, PinMode.PWM);
 
+        //振動パターンコルーチンの変数
         Vibration = vibration_pattern();
 
     }
@@ -44,18 +70,18 @@ public class TestScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-         X= UduinoManager.Instance.analogRead(AnalogPin.A3);
-        Y = UduinoManager.Instance.analogRead(AnalogPin.A4);
+        ValueX = UduinoManager.Instance.analogRead(AnalogPin.A3);
+        ValueY = UduinoManager.Instance.analogRead(AnalogPin.A4);
 
 
 
-        //Debug.Log(Vector2.Distance(tippoint, afterpoint));
-
+        
+        //傾きの条件分岐
         if(Vector2.Distance(tippoint, afterpoint) >= check)
         {
            Debug.Log("傾きの差は"+ check +"以上です。");
             myCollider.enabled = true;
-            StartCoroutine(Vibration);
+            //StartCoroutine(Vibration);
             checkcount++;
         }
         else
@@ -65,30 +91,33 @@ public class TestScript : MonoBehaviour
             StopCoroutine(Vibration);
         }
 
+        //モーター非常停止用のボタン
         if(Input.GetMouseButton(0))
         {
             UduinoManager.Instance.analogWrite(11, 0);
         }
     }
 
+    //1フレーム毎に傾きの座標を取得するコルーチン
     IEnumerator Logging()
     {
         while (true)
         {
             yield return null;
-            Vector2 pos1 = new Vector2(X, Y);
+            Vector2 pos1 = new Vector2(ValueX, ValueY);
             tippoint = pos1;
 
 
         }
     }
 
+    //1秒毎に傾きの座標を取得するコルーチン
     IEnumerator CountTime()
     {
         while (true)
         {
             yield return new WaitForSeconds(span);
-            Vector2 pos2 = new Vector2(X, Y);
+            Vector2 pos2 = new Vector2(ValueX, ValueY);
             afterpoint = pos2;
             
 
@@ -96,7 +125,7 @@ public class TestScript : MonoBehaviour
     }
 
   
-
+    //振動パターンのコルーチン
     IEnumerator vibration_pattern()
     {
 
@@ -111,6 +140,27 @@ public class TestScript : MonoBehaviour
             if (100 < vibrationspan) break;
         }
 
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        StartCoroutine(Vibration);
+    }
+
+
+    private void OnTriggerStay(Collider other)
+    {
+
+        Debug.Log("当たっている");
+        StartCoroutine(Vibration);
+
+
+
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        StopCoroutine(Vibration);
     }
 
 }

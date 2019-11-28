@@ -63,17 +63,7 @@ public class Uduino_Vibration : MonoBehaviour
 
 
 
-        if (valueY <= 500)
-        {
-            Debug.Log("Yの値は550以下");
-            myCollider.enabled = true;
-        }
-        else
-        {
-            Debug.Log("どちらにも当てはまらない");
-            
-            myCollider.enabled = false;
-        }
+    
         
 
     }
@@ -89,30 +79,6 @@ public class Uduino_Vibration : MonoBehaviour
 
         Debug.Log("当たっている");
 
-        UduinoManager.Instance.analogWrite(PinModeCount1, 150);
-        UduinoManager.Instance.analogWrite(PinModeCount2, 150);
-
-        UduinoManager.Instance.analogWrite(PinModeCount1, minPower);
-        UduinoManager.Instance.analogWrite(PinModeCount2, maxPower);
-
-        UduinoManager.Instance.analogWrite(PinModeCount1, minPower);
-        UduinoManager.Instance.analogWrite(PinModeCount2, maxPower);
-
-        UduinoManager.Instance.analogWrite(PinModeCount1, 150);
-        UduinoManager.Instance.analogWrite(PinModeCount2, 150);
-
-        UduinoManager.Instance.analogWrite(PinModeCount1, minPower);
-        UduinoManager.Instance.analogWrite(PinModeCount2, maxPower);
-
-        UduinoManager.Instance.analogWrite(PinModeCount1, minPower);
-        UduinoManager.Instance.analogWrite(PinModeCount2, maxPower);
-
-        UduinoManager.Instance.analogWrite(PinModeCount1, 150);
-        UduinoManager.Instance.analogWrite(PinModeCount2, 150);
-
-        UduinoManager.Instance.analogWrite(PinModeCount1, 0);
-        UduinoManager.Instance.analogWrite(PinModeCount2, 0);
-
 
 
     }
@@ -120,9 +86,6 @@ public class Uduino_Vibration : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
 
-        UduinoManager.Instance.analogWrite(PinModeCount1, 0);
-        UduinoManager.Instance.analogWrite(PinModeCount2, 0);
-        Debug.Log("触ってない");
     }
 
 
