@@ -8,16 +8,14 @@ public class TestScript : MonoBehaviour
 {
     public float X = 0f;
     public float Y = 0f;
-    private float tippointX = 0f;
-    private float tippointY = 0f;
-    private float afterpointX = 0f;
-    private float afterpointY = 0f;
+   
 
     private Vector2 tippoint;
     private Vector2 afterpoint;
-    private Vector2 difference;
+
 
     public float span =1f;
+    public float vibrationspan;
 
     [Range(0, 200)]
     public int check;
@@ -25,17 +23,21 @@ public class TestScript : MonoBehaviour
     public int checkcount=0;
     Collider myCollider;
 
+    IEnumerator Vibration;
+
 
     // Start is called before the first frame update
     void Start()
     {
         StartCoroutine("Logging");
         StartCoroutine("CountTime");
-        StartCoroutine("StopTime");
-
+     
 
 
         myCollider = this.GetComponent<BoxCollider>();
+        UduinoManager.Instance.pinMode(11, PinMode.PWM);
+
+        Vibration = vibration_pattern();
 
     }
 
@@ -53,14 +55,20 @@ public class TestScript : MonoBehaviour
         {
            Debug.Log("傾きの差は"+ check +"以上です。");
             myCollider.enabled = true;
+            StartCoroutine(Vibration);
             checkcount++;
         }
         else
         {
             
             myCollider.enabled = false;
+            StopCoroutine(Vibration);
         }
 
+        if(Input.GetMouseButton(0))
+        {
+            UduinoManager.Instance.analogWrite(11, 0);
+        }
     }
 
     IEnumerator Logging()
@@ -87,16 +95,22 @@ public class TestScript : MonoBehaviour
         }
     }
 
-    IEnumerator StopTime()
+  
+
+    IEnumerator vibration_pattern()
     {
+
+
         while (true)
         {
-            yield return new WaitForSeconds(20);
-            Debug.Break();
-
-
+            UduinoManager.Instance.analogWrite(11, 0);
+            yield return new WaitForSeconds(vibrationspan);
+            Debug.LogFormat("{0}秒経過", vibrationspan);
+            UduinoManager.Instance.analogWrite(11, 255);
+            yield return new WaitForSeconds(vibrationspan);
+            if (100 < vibrationspan) break;
         }
-    }
 
+    }
 
 }

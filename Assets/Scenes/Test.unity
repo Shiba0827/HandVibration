@@ -1384,7 +1384,8 @@ MonoBehaviour:
   X: 0
   Y: 0
   span: 1
-  check: 200
+  vibrationspan: 2
+  check: 120
   checkcount: 0
 --- !u!54 &1274785583
 Rigidbody:
