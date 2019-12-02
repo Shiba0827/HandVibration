@@ -49,18 +49,19 @@ public class TestScript : MonoBehaviour
     void Start()
     {
 
-        Manager = GameObject.Find("Manager");
-        script = Manager.GetComponent<Manager>();
 
-        //傾きセンサーコルーチンの開始
-        StartCoroutine("Logging");
-        StartCoroutine("CountTime");
-     
         //コライダーの定義
         myCollider = this.GetComponent<BoxCollider>();
 
         //振動モーターの定義
         UduinoManager.Instance.pinMode(11, PinMode.PWM);
+
+        Manager = GameObject.Find("Manager");
+        script = Manager.GetComponent<Manager>();
+
+        //傾きセンサーコルーチンの開始
+        StartCoroutine("every_1_frame");
+        StartCoroutine("every_1_seconds");
 
         //振動パターンコルーチンの変数
         Vibration = vibration_pattern();
@@ -73,9 +74,6 @@ public class TestScript : MonoBehaviour
         ValueX = UduinoManager.Instance.analogRead(AnalogPin.A3);
         ValueY = UduinoManager.Instance.analogRead(AnalogPin.A4);
 
-
-
-        
         //傾きの条件分岐
         if(Vector2.Distance(tippoint, afterpoint) >= check)
         {
@@ -99,7 +97,7 @@ public class TestScript : MonoBehaviour
     }
 
     //1フレーム毎に傾きの座標を取得するコルーチン
-    IEnumerator Logging()
+    IEnumerator every_1_frame()
     {
         while (true)
         {
@@ -112,7 +110,7 @@ public class TestScript : MonoBehaviour
     }
 
     //1秒毎に傾きの座標を取得するコルーチン
-    IEnumerator CountTime()
+    IEnumerator every_1_seconds()
     {
         while (true)
         {
@@ -150,12 +148,9 @@ public class TestScript : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-
+        StopCoroutine(Vibration);
         Debug.Log("当たっている");
         StartCoroutine(Vibration);
-
-
-
     }
 
     private void OnTriggerExit(Collider other)
