@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Uduino;
-public class Uduino_Vibration : MonoBehaviour
+
+public class Test2 : MonoBehaviour
 {
-   public int maxPower;
+
+    public int maxPower;
     public int minPower;
 
 
@@ -18,19 +20,19 @@ public class Uduino_Vibration : MonoBehaviour
 
     public float ValueX = 0f;
     public float ValueY = 0f;
-   
+
 
     private Vector2 tippoint;
     private Vector2 afterpoint;
 
 
-    public float span =1f;
+    public float span = 1f;
     public float vibrationspan;
 
     [Range(0, 200)]
     public int check;
 
-    public int checkcount=0;
+    public int checkcount = 0;
     Collider myCollider;
 
     UduinoManager manager;
@@ -73,23 +75,22 @@ public class Uduino_Vibration : MonoBehaviour
         ValueY = UduinoManager.Instance.analogRead(AnalogPin.A4);
 
         //傾きの条件分岐
-        if(Vector2.Distance(tippoint, afterpoint) >= check)
+        if (Vector2.Distance(tippoint, afterpoint) >= check)
         {
-            
-           Debug.Log("傾きの差は"+ check +"以上です。");
+
+            Debug.Log("傾きの差は" + check + "以上です。");
             myCollider.enabled = true;
-            //StartCoroutine(Vibration);
             checkcount++;
         }
         else
         {
-            
+
             myCollider.enabled = false;
             StopCoroutine(Vibration);
         }
 
         //モーター非常停止用のボタン
-        if(Input.GetMouseButton(0))
+        if (Input.GetMouseButton(0))
         {
             UduinoManager.Instance.analogWrite(11, 0);
         }
@@ -100,7 +101,6 @@ public class Uduino_Vibration : MonoBehaviour
     {
         while (true)
         {
-            yield return null;
             Vector2 pos1 = new Vector2(ValueX, ValueY);
             tippoint = pos1;
 
@@ -113,15 +113,14 @@ public class Uduino_Vibration : MonoBehaviour
     {
         while (true)
         {
-            yield return new WaitForSeconds(span);
+            yield return new WaitForSeconds(1);
             Vector2 pos2 = new Vector2(ValueX, ValueY);
             afterpoint = pos2;
-            
-
         }
     }
 
-  
+
+
     //振動パターンのコルーチン
     IEnumerator vibration_pattern()
     {
@@ -129,14 +128,15 @@ public class Uduino_Vibration : MonoBehaviour
 
         while (true)
         {
+            yield return new WaitForSeconds(vibrationspan);
             UduinoManager.Instance.analogWrite(11, 0);
             UduinoManager.Instance.analogWrite(12, 0);
-            yield return new WaitForSeconds(vibrationspan);
-            Debug.LogFormat("{0}秒経過", vibrationspan);
-            UduinoManager.Instance.analogWrite(11, 120);
-            UduinoManager.Instance.analogWrite(11, 255);
-            yield return new WaitForSeconds(vibrationspan);
-            if (100 < vibrationspan) break;
+            int testpower = Mathf.FloorToInt(Vector2.Distance(tippoint, afterpoint));
+            Debug.Log("testpowerは" + testpower + "{0}秒経過" + vibrationspan);
+            //UduinoManager.Instance.analogWrite(11, testpower);
+           // UduinoManager.Instance.analogWrite(12, testpower);
+           
+            if (vibrationspan>4) break;
         }
 
     }
