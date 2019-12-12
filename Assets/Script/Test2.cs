@@ -101,6 +101,8 @@ public class Test2 : MonoBehaviour
     {
         while (true)
         {
+            yield return null;
+            yield return null;
             Vector2 pos1 = new Vector2(ValueX, ValueY);
             tippoint = pos1;
 
@@ -134,8 +136,8 @@ public class Test2 : MonoBehaviour
             int testpower = Mathf.FloorToInt(Vector2.Distance(tippoint, afterpoint));
             Debug.Log("testpowerは" + testpower + "{0}秒経過" + vibrationspan);
             //UduinoManager.Instance.analogWrite(11, testpower);
-           // UduinoManager.Instance.analogWrite(12, testpower);
-           
+            // UduinoManager.Instance.analogWrite(12, testpower);
+            yield return null;
             if (vibrationspan>4) break;
         }
 
