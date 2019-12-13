@@ -96,11 +96,13 @@ public class Test2 : MonoBehaviour{
         if (Vector2.Distance(tippoint, afterpoint) >= check){
             //Debug.Log("傾きの差は" + check + "以上です。");
             myCollider.enabled = true;
+            
             checkcount++;
         }
         else{
             myCollider.enabled = false;
-            //StopCoroutine(Vibration);
+            UduinoManager.Instance.analogWrite(12, 0);
+            StopCoroutine(Vibration1);
         }
 
         //モーター非常停止用のボタン
@@ -108,7 +110,8 @@ public class Test2 : MonoBehaviour{
             UduinoManager.Instance.analogWrite(11, 0);
         }
 
-     
+        
+
     }
 
     //1フレーム毎に傾きの座標を取得するコルーチン
@@ -123,7 +126,7 @@ public class Test2 : MonoBehaviour{
     //1秒毎に傾きの座標を取得するコルーチン
     IEnumerator every_1_seconds(){
         while (true){
-            yield return new WaitForSeconds(2);
+            yield return new WaitForSeconds(1);
             Vector2 pos2 = new Vector2(ValueX, ValueY);
             afterpoint = pos2;
         }
@@ -134,29 +137,49 @@ public class Test2 : MonoBehaviour{
     {
         while (true)
         {
+            //testpower = Mathf.FloorToInt(Vector2.Distance(tippoint, afterpoint));
 
+            UduinoManager.Instance.analogWrite(12, 0);
 
-            UduinoManager.Instance.analogWrite(11, 0);
-            testpower = Mathf.FloorToInt(Vector2.Distance(tippoint, afterpoint));
-            Debug.Log("testpowerは" + testpower + "{0}秒経過" + span1);
+            yield return new WaitForSeconds(1.0f);
 
-            this.audioSource.volume = testpower;
+            
 
-            UduinoManager.Instance.analogWrite(11,255);
+            UduinoManager.Instance.analogWrite(12, 180);
+
+            yield return new WaitForSeconds(1.0f);
+
+            UduinoManager.Instance.analogWrite(12, 0);
+
+            yield return new WaitForSeconds(5.0f);
+       
             yield return null;
 
-            if (checktime <= span1)
-            {
-                checktime++;
-                Debug.Log("cheacktime" + checktime);
-            }
-            else
-            {
-                Debug.Log("コルーチンの停止");
-                StopCoroutine(Vibration1);
-                UduinoManager.Instance.analogWrite(11, 0);
-                
-            }
+      
+
+        }
+
+    }
+
+
+    //振動パターンのコルーチン
+    IEnumerator vibration_pattern2()
+    {
+        while (true)
+        {
+            //testpower = Mathf.FloorToInt(Vector2.Distance(tippoint, afterpoint));
+
+            UduinoManager.Instance.analogWrite(11, 0);
+
+            yield return new WaitForSeconds(1.0f);
+
+            UduinoManager.Instance.analogWrite(11, 60);
+
+            yield return new WaitForSeconds(2.0f);
+
+            yield return null;
+
+
 
         }
 
@@ -164,7 +187,7 @@ public class Test2 : MonoBehaviour{
 
 
 
-
+    /*
 
     //振動パターンのコルーチン
     IEnumerator vibration_pattern2(){
@@ -196,15 +219,19 @@ public class Test2 : MonoBehaviour{
 
     }
 
+    */
+
+
     private void OnTriggerEnter(Collider other){
         //StartCoroutine(Vibration);
+        StartCoroutine(Vibration1);
         audioSource.Play();
     }
 
 
     private void OnTriggerStay(Collider other){
       //  StartCoroutine(Vibration1);
-        StartCoroutine(Vibration1);
+        
 
     }
 
