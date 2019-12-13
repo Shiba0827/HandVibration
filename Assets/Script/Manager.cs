@@ -5,13 +5,13 @@ using UnityEngine.SceneManagement;
 
 public class Manager : MonoBehaviour
 {
+
     [System.Serializable]
     public struct vibration
     {
         public string Name;
-        public int maxpower;
-        public int minpower;
-
+        public int maxpower,minpower;
+        public int span1, span2;
     }
 
     public vibration[] status;

@@ -8,6 +8,8 @@ public class Test2 : MonoBehaviour{
     public int maxPower, minPower, PinModeCount1, PinModeCount;//Arduinoに与える力と接続ピンの定義
 
     public GameObject Manager;//オブジェクトマネージャーそのものが入る変数の定義
+    Manager script; //管理スクリプトの定義
+
     public int vibrationCount; //どのパターンかを決めるカウントの変数の定義
 
     public float ValueX = 0f;
@@ -19,7 +21,7 @@ public class Test2 : MonoBehaviour{
 
 
     public float span = 1f;
-    public float vibrationspan;
+    public float span1,span2;
 
     [Range(0, 200)]
     public int check;
@@ -29,14 +31,15 @@ public class Test2 : MonoBehaviour{
 
     UduinoManager manager;
 
-    Manager script; //管理スクリプトの定義
+    
 
     [SerializeField]
     private int testpower;
 
-    public int checktime;
+    public int checktime=0;
 
-    IEnumerator Vibration;
+    IEnumerator Vibration1;
+    IEnumerator Vibration2;
 
     public AudioClip audioClip1;
     private AudioSource audioSource;
@@ -60,12 +63,26 @@ public class Test2 : MonoBehaviour{
         Manager = GameObject.Find("Manager");
         script = Manager.GetComponent<Manager>();
 
+        minPower = script.status[vibrationCount].minpower;
+        maxPower = script.status[vibrationCount].maxpower;
+        span1 = script.status[vibrationCount].span1;
+        span2 = script.status[vibrationCount].span2;
+
+       /* Debug.Log("このオブジェクトの振動の強さはの最低は" + minPower + "です");
+        Debug.Log("このオブジェクトの振動の強さはの最大は" + maxPower + "です");
+        Debug.Log("このオブジェクトの振動の最低振動感覚は" + span1 + "です");
+        Debug.Log("このオブジェクトの振動の最大振動感覚は" + span2 + "です");
+        */
+
         //傾きセンサーコルーチンの開始
         StartCoroutine("every_1_frame");
         StartCoroutine("every_1_seconds");
 
         //振動パターンコルーチンの変数定義
-        Vibration = vibration_pattern();
+        Vibration1 = vibration_pattern1();
+        Vibration2 = vibration_pattern2();
+
+        
 
 
     }
@@ -112,32 +129,65 @@ public class Test2 : MonoBehaviour{
         }
     }
 
-
-
     //振動パターンのコルーチン
-    IEnumerator vibration_pattern(){
-        while (true){
-            
-            
+    IEnumerator vibration_pattern1()
+    {
+        while (true)
+        {
+
+
             UduinoManager.Instance.analogWrite(11, 0);
-            UduinoManager.Instance.analogWrite(12, 0);
-           testpower = Mathf.FloorToInt(Vector2.Distance(tippoint, afterpoint));
-            Debug.Log("testpowerは" + testpower + "{0}秒経過" + vibrationspan);
+            testpower = Mathf.FloorToInt(Vector2.Distance(tippoint, afterpoint));
+            Debug.Log("testpowerは" + testpower + "{0}秒経過" + span1);
 
             this.audioSource.volume = testpower;
 
-            UduinoManager.Instance.analogWrite(11, 255);
-            // UduinoManager.Instance.analogWrite(12, testpower);
+            UduinoManager.Instance.analogWrite(11,255);
+            yield return null;
+
+            if (checktime <= span1)
+            {
+                checktime++;
+                Debug.Log("cheacktime" + checktime);
+            }
+            else
+            {
+                StopCoroutine(Vibration1);
+                UduinoManager.Instance.analogWrite(11, 0);
+            }
+
+        }
+
+    }
+
+
+
+
+
+    //振動パターンのコルーチン
+    IEnumerator vibration_pattern2(){
+        while (true){
+            
+            
+            UduinoManager.Instance.analogWrite(12, 0);
+           testpower = Mathf.FloorToInt(Vector2.Distance(tippoint, afterpoint));
+            Debug.Log("testpowerは" + testpower + "{0}秒経過" + span2);
+
+            this.audioSource.volume = testpower;
+
+            UduinoManager.Instance.analogWrite(12, 255);
+  
             yield return null;
             
-            if(checktime<=vibrationspan)
+            if(checktime<=span2)
             {
                 checktime++;
             }
             else
             {
-                StopCoroutine(Vibration);
-                UduinoManager.Instance.analogWrite(11, 0);
+                Debug.Log("動作している");
+                StopCoroutine(Vibration2);
+                UduinoManager.Instance.analogWrite(12, 0);
             }
                
         }
@@ -151,12 +201,14 @@ public class Test2 : MonoBehaviour{
 
 
     private void OnTriggerStay(Collider other){
-        StartCoroutine(Vibration);
-        
+      //  StartCoroutine(Vibration1);
+        StartCoroutine(Vibration1);
+
     }
 
     private void OnTriggerExit(Collider other){
-        StopCoroutine(Vibration);
+       // StopCoroutine(Vibration1);
+        StopCoroutine(Vibration1);
         UduinoManager.Instance.analogWrite(11, 0);
         audioSource.Stop();
     }
