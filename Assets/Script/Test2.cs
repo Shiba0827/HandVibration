@@ -139,20 +139,21 @@ public class Test2 : MonoBehaviour{
         {
             //testpower = Mathf.FloorToInt(Vector2.Distance(tippoint, afterpoint));
 
-            UduinoManager.Instance.analogWrite(12, 0);
+            yield return new WaitForSeconds(0.1f);
 
-            yield return new WaitForSeconds(1.0f);
-
-            
+            UduinoManager.Instance.analogWrite(12, 60);
 
             UduinoManager.Instance.analogWrite(12, 180);
 
-            yield return new WaitForSeconds(1.0f);
+            yield return new WaitForSeconds(0.1f);
+
+            UduinoManager.Instance.analogWrite(12, 60);
+            yield return new WaitForSeconds(0.1f);
 
             UduinoManager.Instance.analogWrite(12, 0);
 
-            yield return new WaitForSeconds(5.0f);
-       
+
+
             yield return null;
 
       
@@ -175,7 +176,7 @@ public class Test2 : MonoBehaviour{
 
             UduinoManager.Instance.analogWrite(11, 60);
 
-            yield return new WaitForSeconds(2.0f);
+            yield return new WaitForSeconds(1.0f);
 
             yield return null;
 
@@ -223,15 +224,13 @@ public class Test2 : MonoBehaviour{
 
 
     private void OnTriggerEnter(Collider other){
-        //StartCoroutine(Vibration);
-        StartCoroutine(Vibration1);
-        audioSource.Play();
+       StartCoroutine(Vibration1);
+       audioSource.Play();
     }
 
 
     private void OnTriggerStay(Collider other){
-      //  StartCoroutine(Vibration1);
-        
+       
 
     }
 
