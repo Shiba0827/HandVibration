@@ -152,8 +152,10 @@ public class Test2 : MonoBehaviour{
             }
             else
             {
+                Debug.Log("コルーチンの停止");
                 StopCoroutine(Vibration1);
                 UduinoManager.Instance.analogWrite(11, 0);
+                
             }
 
         }
