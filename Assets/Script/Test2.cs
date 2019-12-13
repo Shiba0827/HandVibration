@@ -43,11 +43,17 @@ public class Test2 : MonoBehaviour
 
     IEnumerator Vibration;
 
-
+    public AudioClip audioClip1;
+    private AudioSource audioSource;
+   
+    
     // Start is called before the first frame update
     void Start()
     {
 
+        audioSource = gameObject.GetComponent<AudioSource>();
+        
+        
 
         //コライダーの定義
         myCollider = this.GetComponent<BoxCollider>();
@@ -135,7 +141,8 @@ public class Test2 : MonoBehaviour
             UduinoManager.Instance.analogWrite(12, 0);
             int testpower = Mathf.FloorToInt(Vector2.Distance(tippoint, afterpoint));
             Debug.Log("testpowerは" + testpower + "{0}秒経過" + vibrationspan);
-            //UduinoManager.Instance.analogWrite(11, testpower);
+            this.audioSource.volume = testpower/10;
+            UduinoManager.Instance.analogWrite(11, testpower);
             // UduinoManager.Instance.analogWrite(12, testpower);
             yield return null;
             if (vibrationspan>4) break;
@@ -146,6 +153,8 @@ public class Test2 : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         StartCoroutine(Vibration);
+        audioSource.Play();
+
     }
 
 
@@ -153,12 +162,14 @@ public class Test2 : MonoBehaviour
     {
         StopCoroutine(Vibration);
         Debug.Log("当たっている");
+       
         StartCoroutine(Vibration);
     }
 
     private void OnTriggerExit(Collider other)
     {
         StopCoroutine(Vibration);
+        audioSource.Stop();
     }
 
 }
