@@ -34,7 +34,7 @@ public class Test2 : MonoBehaviour{
     
 
     [SerializeField]
-    private int testpower;
+    private float testpower;
 
     public int checktime=0;
 
@@ -139,18 +139,21 @@ public class Test2 : MonoBehaviour{
         {
             //testpower = Mathf.FloorToInt(Vector2.Distance(tippoint, afterpoint));
 
-            yield return new WaitForSeconds(0.1f);
+            testpower = Mathf.FloorToInt(Vector2.Distance(tippoint, afterpoint));
+            this.audioSource.volume = testpower / 1000;
 
-            UduinoManager.Instance.analogWrite(12, 60);
+            yield return new WaitForSeconds(span1);
 
-            UduinoManager.Instance.analogWrite(12, 180);
+            UduinoManager.Instance.analogWrite(11, minPower);
 
-            yield return new WaitForSeconds(0.1f);
+            UduinoManager.Instance.analogWrite(11, maxPower);
 
-            UduinoManager.Instance.analogWrite(12, 60);
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(span1);
 
-            UduinoManager.Instance.analogWrite(12, 0);
+            UduinoManager.Instance.analogWrite(11, minPower);
+            yield return new WaitForSeconds(span1);
+
+            UduinoManager.Instance.analogWrite(11,0);
 
 
 
@@ -174,7 +177,7 @@ public class Test2 : MonoBehaviour{
 
             yield return new WaitForSeconds(1.0f);
 
-            UduinoManager.Instance.analogWrite(11, 60);
+            UduinoManager.Instance.analogWrite(11, minPower);
 
             yield return new WaitForSeconds(1.0f);
 

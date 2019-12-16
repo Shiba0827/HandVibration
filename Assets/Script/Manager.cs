@@ -11,7 +11,7 @@ public class Manager : MonoBehaviour
     {
         public string Name;
         public int maxpower,minpower;
-        public int span1, span2;
+        public float span1, span2;
     }
 
     public vibration[] status;
