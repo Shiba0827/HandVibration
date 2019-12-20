@@ -12,9 +12,11 @@ public class Manager : MonoBehaviour
         public string Name;
         public int maxpower,minpower;
         public float span1, span2;
+
+        public GameObject Point1, Point2, Point3, Point4;
     }
 
-    public vibration[] status;
+    //public vibration[] status;
     // Start is called before the first frame update
     void Start()
     {
@@ -24,29 +26,31 @@ public class Manager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         // 1に移動
-        if (Input.GetKey(KeyCode.V))
+        if (Input.GetKeyDown(KeyCode.V))
         {
-            SceneManager.LoadScene("Blocks1");
-            Debug.Log("Blocks1を読み込みました。");
+            
+         
+            Debug.Log("Point1を読み込みました。");
         }
         // 2に移動
-        if (Input.GetKey(KeyCode.B))
+        if (Input.GetKeyDown(KeyCode.B))
         {
-            SceneManager.LoadScene("Blocks2");
-            Debug.Log("Blocks2を読み込みました。");
+          
+            Debug.Log("Point2を読み込みました。");
         }
         // 3に移動
-        if (Input.GetKey(KeyCode.N))
+        if (Input.GetKeyDown(KeyCode.N))
         {
-            SceneManager.LoadScene("Blocks3");
-            Debug.Log("Blocks3を読み込みました。");
+          
+            Debug.Log("Point3を読み込みました。");
         }
         // 4に移動
-        if (Input.GetKey(KeyCode.M))
+        if (Input.GetKeyDown(KeyCode.M))
         {
-            SceneManager.LoadScene("Blocks4");
-            Debug.Log("Blocks4を読み込みました。");
+           
+            Debug.Log("Point4を読み込みました。");
         }
     }
 }

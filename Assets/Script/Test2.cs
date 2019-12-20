@@ -63,10 +63,7 @@ public class Test2 : MonoBehaviour{
         Manager = GameObject.Find("Manager");
         script = Manager.GetComponent<Manager>();
 
-        minPower = script.status[vibrationCount].minpower;
-        maxPower = script.status[vibrationCount].maxpower;
-        span1 = script.status[vibrationCount].span1;
-        span2 = script.status[vibrationCount].span2;
+       
 
        /* Debug.Log("このオブジェクトの振動の強さはの最低は" + minPower + "です");
         Debug.Log("このオブジェクトの振動の強さはの最大は" + maxPower + "です");
