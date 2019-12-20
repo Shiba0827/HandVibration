@@ -145,16 +145,21 @@ public class Test2 : MonoBehaviour{
             yield return new WaitForSeconds(span1);
 
             UduinoManager.Instance.analogWrite(11, minPower);
+            yield return null;
 
             UduinoManager.Instance.analogWrite(11, maxPower);
+            yield return null;
 
             yield return new WaitForSeconds(span1);
+            yield return null;
 
             UduinoManager.Instance.analogWrite(11, minPower);
+            yield return null;
             yield return new WaitForSeconds(span1);
+            yield return null;
 
             UduinoManager.Instance.analogWrite(11,0);
-
+            yield return null;
 
 
             yield return null;
