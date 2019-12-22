@@ -230,6 +230,7 @@ public class Test2 : MonoBehaviour{
 
     private void OnTriggerEnter(Collider other){
        StartCoroutine(Vibration1);
+        Debug.Log("触れている");
        audioSource.Play();
     }
 
