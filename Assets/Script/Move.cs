@@ -8,6 +8,7 @@ public class Move : MonoBehaviour
     public GameObject object2;
     public GameObject object3;
     public GameObject object4;
+    public GameObject object5;
 
     // Start is called before the first frame update
     void Start()
@@ -48,6 +49,11 @@ public class Move : MonoBehaviour
         {
             transform.position = object4.transform.position;
             transform.rotation = object4.transform.rotation;
+        }
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            transform.position = object5.transform.position;
+            transform.rotation = object5.transform.rotation;
         }
     }
 }
