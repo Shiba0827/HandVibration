@@ -28,20 +28,14 @@ public class Test : MonoBehaviour
     private float testpower;
 
     IEnumerator Vibration1;
-    IEnumerator Vibration2;
-
-    public AudioClip audioClip1;
-    private AudioSource audioSource;
-
-
-
+    private AudioSource sound01;
+    private AudioSource sound02;
+    private AudioSource sound03;
 
 
     // Start is called before the first frame update
     void Start()
     {
-
-        audioSource = gameObject.GetComponent<AudioSource>();
 
         //コライダーの定義
         myCollider = this.GetComponent<BoxCollider>();
@@ -50,16 +44,17 @@ public class Test : MonoBehaviour
         UduinoManager.Instance.pinMode(11, PinMode.PWM);
         UduinoManager.Instance.pinMode(12, PinMode.PWM);
 
-        //傾きセンサーコルーチンの開始
+        //傾きセンサーコルーチンの開始 
         StartCoroutine("every_1_frame");
         StartCoroutine("every_1_seconds");
 
         //振動パターンコルーチンの変数定義
         Vibration1 = vibration_pattern1();
-        Vibration2 = vibration_pattern2();
 
-
-
+        AudioSource[] audioSources = GetComponents<AudioSource>();
+        sound01 = audioSources[0];
+        sound02 = audioSources[1];
+        sound03 = audioSources[2];
 
     }
 
@@ -72,14 +67,14 @@ public class Test : MonoBehaviour
         //傾きの条件分岐
         if (Vector2.Distance(tippoint, afterpoint) >= check)
         {
-            //Debug.Log("傾きの差は" + check + "以上です。");
+
             myCollider.enabled = true;
 
             checkcount++;
         }
         else
         {
-            myCollider.enabled = false;
+          myCollider.enabled = false;
             UduinoManager.Instance.analogWrite(12, 0);
             StopCoroutine(Vibration1);
         }
@@ -122,23 +117,36 @@ public class Test : MonoBehaviour
     {
         while (true)
         {
-            //testpower = Mathf.FloorToInt(Vector2.Distance(tippoint, afterpoint));
+  
 
             testpower = Mathf.FloorToInt(Vector2.Distance(tippoint, afterpoint));
-            this.audioSource.volume = testpower / 1000;
+           /*
+            if (testpower - check <= 20){
+                sound01.PlayOneShot(sound01.clip);
+                Debug.Log("Clip1");
+            }
+            else if (testpower - check <= 50) {
+                sound02.PlayOneShot(sound02.clip);
+                Debug.Log("Clip2");
+            }
+            else if(testpower - check <= 20){
+                sound03.PlayOneShot(sound03.clip);
+                Debug.Log("Clip3");
+            }*/
+            
 
             UduinoManager.Instance.analogWrite(11, minPower);
             yield return new WaitForSeconds(span1);
-            Debug.Log("0.2秒待つ");
+            Debug.Log(span1+"待つ");
 
 
             UduinoManager.Instance.analogWrite(11, maxPower);
             yield return new WaitForSeconds(span2);
-            Debug.Log("0.5秒待つ");
+            Debug.Log(span2+"待つ");
 
             UduinoManager.Instance.analogWrite(11, minPower);
             yield return new WaitForSeconds(span1);
-            Debug.Log("0.2秒待つ");
+            Debug.Log(span1+"待つ");
 
 
         }
@@ -146,42 +154,47 @@ public class Test : MonoBehaviour
     }
 
 
-    //振動パターンのコルーチン
-    IEnumerator vibration_pattern2()
-    {
-        while (true)
-        {
-            //testpower = Mathf.FloorToInt(Vector2.Distance(tippoint, afterpoint));
-
-            testpower = Mathf.FloorToInt(Vector2.Distance(tippoint, afterpoint));
-            this.audioSource.volume = testpower / 1000;
-
-           
-        }
-
-    }
-
+   
 
 
     private void OnTriggerEnter(Collider other)
     {
         StartCoroutine(Vibration1);
+        if (testpower - check <= 20)
+        {
+            sound01.PlayOneShot(sound01.clip);
+            Debug.Log("Clip1");
+        }
+        else if (testpower - check <= 50)
+        {
+            sound02.PlayOneShot(sound02.clip);
+            Debug.Log("Clip2");
+        }
+        else if (testpower - check <= 20)
+        {
+            sound03.PlayOneShot(sound03.clip);
+            Debug.Log("Clip3");
+        }
+
         Debug.Log("触れている");
-        audioSource.Play();
+
     }
 
 
     private void OnTriggerStay(Collider other)
     {
-
+       
 
     }
 
     private void OnTriggerExit(Collider other)
     {
-        // StopCoroutine(Vibration1);
+
         StopCoroutine(Vibration1);
         UduinoManager.Instance.analogWrite(11, 0);
-        audioSource.Stop();
+        sound01.Stop();
+        sound02.Stop();
+        sound03.Stop();
+
     }
 }
